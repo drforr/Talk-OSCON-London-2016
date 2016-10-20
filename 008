@@ -1,0 +1,24 @@
+
+
+
+
+                                Or, *really* old-school
+
+     use Slang::Roman;
+
+     say 0rↀ  + 0rDCLXVI;
+
+     # 1666
+
+     my $a = 0rIV / 0rM;
+
+     say $a;
+
+     # 0.004
+
+
+
+
+
+
+

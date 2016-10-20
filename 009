@@ -1,0 +1,24 @@
+
+
+
+
+                                Sigils that make sense
+
+     my @powers = 1, 2, 4, 8;
+
+     my %foo = :name('Jeff'), :division('Programming');
+
+     say @powers[ 1, 2 ];
+
+     say %foo<name>;
+
+     # (2 4)
+
+     # Jeff
+
+
+
+
+
+
+

@@ -1,0 +1,28 @@
+                                  Object Orientation
+     enum Chirality <left right>;
+     enum Effort <minimum average maximum>;
+
+     class Hand {
+     	has Chirality $.chirality;
+     	has $.content; }
+
+     role Humanoid {
+     	has Hand $.left-hand  .= new( :chirality( left ) );
+     	has Hand $.right-hand .= new( :chirality( right ) ); }
+
+     class Character does Humanoid {
+     	has Str $.name is required;
+
+     	has Int @.Attr where 0 < * <= 18;
+
+     	method attack( Character $enemy, Effort $effort ) { ... } }
+
+     class Sword { has Int $.Dmg }
+
+     my $Wade = Character.new(:name('Wade'));
+     $Wade.left-hand.content = Sword.new( Dmg => 5 );
+     $Wade.right-hand.content = Sword.new( Dmg => 5 );
+
+     my $Francis = Character.new(:name('Francis'));
+
+     $Wade.attack($Francis,maximum);

@@ -1,0 +1,24 @@
+
+
+
+
+
+
+                                 Single-pass grammars
+
+     my @doctor = { :first('Christopher'), :last('Eccleston'), years => 1 },
+                  { :first('David'),       :last('Tennant'),   years => 4 },
+                  { :first('Matt'),        :last('Smith'),     years => 4 },
+                  { :first('Peter'),       :last('Capaldi'),   years => 3 };
+
+     say 'First New Who Doctor: ', @doctor[0]{'first'}, ' ', @doctor[0]<last>;
+
+     say "Average run: " ~ @doctor.elems R/ sum map { .<years> }, @doctor;
+
+
+
+
+
+
+
+

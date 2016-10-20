@@ -1,0 +1,24 @@
+
+
+
+
+                                   Custom operators
+
+     multi sub prefix:<∑>( *@values ) {
+     	[+] @values
+     }
+
+     my $total = ∑ 0 ... ∞;
+     	
+     multi sub postfix:<⁺>( $x ) { $x.charge( +1 ) }
+     multi sub postfix:<⁻>( $x ) { $x.charge( -1 ) }
+     multi sub prefix:<√>( $x ) { sqrt( $x ) }
+
+     W⁺ = (-W¹ + iW²)/√2 ;
+     W⁻ = (-W¹ + iW²)/√2 ;
+
+
+
+
+
+

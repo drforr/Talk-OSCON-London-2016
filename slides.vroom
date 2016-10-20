@@ -1,0 +1,282 @@
+#        1         2         3         4         5         6         7         8
+# 345678901234567890123456789012345678901234567890123456789012345678901234567890
+#
+# See `perldoc Vroom` for complete details.
+#
+---- config
+# Basic config options.
+title: Introduction to Perl 6
+indent: 5
+auto_size: 1
+# height: 18
+# width: 69
+vim_opts: '-u NONE'
+skip: 0
+
+----- center
+== Ten Things You Need To Know about Perl 6
+
+
+Jeffrey Goff, Evozon Systems LLC
+OSCON London 2016
+https://github.com/drforr
+http://theperlfisher.blogspot.ro
+
+-----
+== Resources
+
+* perl6.org (obviously)
+* docs.perl6.org - Online documentation
+* modules.perl6.org - CPAN Lite
+
+* rakudo.org - Where to get the latest
+* https://github.com/tadzik/rakudobrew - Perlbrew for Perl 6
+* https://github.com/tadzik/panda/ - Module installer
+
+* irc://irc.freenode.org/perl6 - #perl6 on IRC.freenode.org
+
+* http://rosettacode.org/wiki/Category:Perl_6 - Sample source
+
+-----
+== Highlights
+
+* Clean, single-pass parseable grammar
+
+* User-friendly error messages
+
+* Unicode friendly
+
+* Sigils that make sense to beginners
+
+* Math that works
+
+* Function Signatures
+
+* Bootstrapped with regular expressions
+
+* OO with a type lattice built on a Metaprogramming model
+
+* Custom operators
+
+* Built-in concurrency
+
+-----
+== Single-pass grammars
+
+my @doctor = { :first('Christopher'), :last('Eccleston'), years => 1 },
+             { :first('David'),       :last('Tennant'),   years => 4 },
+             { :first('Matt'),        :last('Smith'),     years => 4 },
+             { :first('Peter'),       :last('Capaldi'),   years => 3 };
+
+say 'First New Who Doctor: ', @doctor[0]{'first'}, ' ', @doctor[0]<last>;
+
+say "Average run: " ~ @doctor.elems R/ sum map { .<years> }, @doctor;
+
+-----
+== Error messages
+
+sub mean( @a ) {
+  my $sum = sum( @a )
+  ( $sum / @a.elems )
+}
+say mean 1, 2, 4;
+
+$ perl6 test.pl6
+
+Two terms in a row across lines (missing semicolon or comma?)
+at /home/jgoff/test.pl6:2
+------>   my $sum = sum( @a )⏏<EOL>
+    expecting any of:
+        infix
+        infix stopper
+        postfix
+        statement end
+        statement modifier
+        statement modifier loop
+
+-----
+== Unicode Friendly
+
+my $α = 2 + ⅒  ; 
+
+say $α ÷ 2;
+
+# 1.05
+
+-----
+== Or, *really* old-school
+
+use Slang::Roman;
+
+say 0rↀ  + 0rDCLXVI;
+
+# 1666
+
+my $a = 0rIV / 0rM;
+
+say $a;
+
+# 0.004
+
+====
+This is really just a teaser to show off how powerful the internals really are.
+The module itself is a bit too complex to show, but I like to think that the
+fact that I can go in and muck about with the actual grammar, changing how
+numbers are read and stored internally speaks volumes.
+
+-----
+== Sigils that make sense
+
+my @powers = 1, 2, 4, 8;
+
+my %foo = :name('Jeff'), :division('Programming');
+
+say @powers[ 1, 2 ];
+
+say %foo<name>;
+
+# (2 4)
+
+# Jeff
+
+-----
+== Floating-Point
+
+
+$ perl -E 'say 0.1 + 0.2 - 0.3'
+
++5.55111512312578e-17
+
++$ ruby -e 'print 0.1 + 0.2 - 0.3'
+
++5.55111512312578e-17
+
++$ python -c 'print 0.1 + 0.2 - 0.3'
+
++5.55111512312578e-17
+
++$ perl6 -e 'say 0.1 + 0.2 - 0.3'
+
++0
+
++$ perl6 -e'say (0.1).nude'
+
++(1 10)
+
+-----
+== Function Signatures
+
+sub plus( Int $a, Int $b ) {
+	$a + $b
+}
+
+say plus 1, 2;
+
+# 3
+
+say plus 1, 2, 3;
+
+===SORRY!=== Error while compiling -e
+Calling a(Int, Int, Int) will never work with declared signature
+(Int $a, Int $b)
+at -e:1
+------> ub foo( Int $a, Int $b ) { $a + $b }; say ⏏foo 1, 2, 3;
+
+-----
+== Not so regular expressions
+
+my $id = '[ { "first": "Christopher", "last": "Eccleston", "id": 1 } ]';
+
+my regex Str     { '"' (<-[ " ]>+) '"' };
+my regex Integer {         \d+         };
+
+my regex Value {                       <Integer> | <Str>               };
+
+my regex Pair  {             <Str> ':' \s+ <Value>                     };
+my regex Pairs {     '{' \s+       <Pair>+    %% (',' \s+) \s+ '}'     };
+my regex List  { '[' \s+           <Pairs>+   %% (',' \s+)     \s+ ']' };
+
+$id ~~ m{ <List> };
+
+say $/;
+
+-----
+== Object Orientation
+enum Chirality <left right>;
+enum Effort <minimum average maximum>;
+
+class Hand {
+	has Chirality $.chirality;
+	has $.content; }
+
+role Humanoid {
+	has Hand $.left-hand  .= new( :chirality( left ) );
+	has Hand $.right-hand .= new( :chirality( right ) ); }
+
+class Character does Humanoid {
+	has Str $.name is required;
+
+	has Int @.Attr where 0 < * <= 18;
+
+	method attack( Character $enemy, Effort $effort ) { ... } }
+
+class Sword { has Int $.Dmg }
+
+my $Wade = Character.new(:name('Wade'));
+$Wade.left-hand.content = Sword.new( Dmg => 5 );
+$Wade.right-hand.content = Sword.new( Dmg => 5 );
+
+my $Francis = Character.new(:name('Francis'));
+
+$Wade.attack($Francis,maximum);
+
+-----
+== Look Ma, Proper Lists!
+
+my $fh = open 'sample.tsv', :r;
+
+my @line;
+for $fh.lines -> $line {
+	my ( $id, $last-name, $first-name ) =
+		$line.chomp.split( "\t" );
+	@line[$id - 1] = $last-name, $first-name;
+}
+
+close $fh;
+
+say @line;
+
+# [("Tyler", "Rose"), ("Smith", "Mickey"),
+   ("Jones", "Martha"), ("Noble", "Donna")]
+
+-----
+== Custom operators
+
+multi sub prefix:<∑>( *@values ) {
+	[+] @values
+}
+
+my $total = ∑ 0 ... ∞;
+	
+multi sub postfix:<⁺>( $x ) { $x.charge( +1 ) }
+multi sub postfix:<⁻>( $x ) { $x.charge( -1 ) }
+multi sub prefix:<√>( $x ) { sqrt( $x ) }
+
+W⁺ = (-W¹ + iW²)/√2 ;
+W⁻ = (-W¹ + iW²)/√2 ;
+
+-----
+== Perl 6 style
+
+for 'sample.txt'.IO.lines.kv -> $index, $line {
+	my ( $method, $id, $name, timestamp ) = $line.chomp.split( "\t" );
+
+	given $method {
+		when 'create'	{ %object{$id} = $name, $timestamp }
+		when 'delete'	{ %object{$id}:delete }
+	}
+	if $method eq 'read' | 'update' | 'delete' {
+		say "missing object on line $index" unless %object{$id}
+	}
+}
+

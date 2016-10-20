@@ -1,0 +1,24 @@
+
+
+
+                                  Function Signatures
+
+     sub plus( Int $a, Int $b ) {
+     	$a + $b
+     }
+
+     say plus 1, 2;
+
+     # 3
+
+     say plus 1, 2, 3;
+
+     ===SORRY!=== Error while compiling -e
+     Calling a(Int, Int, Int) will never work with declared signature
+     (Int $a, Int $b)
+     at -e:1
+
+
+
+
+

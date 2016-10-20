@@ -1,0 +1,24 @@
+
+
+
+                              Not so regular expressions
+
+     my $id = '[ { "first": "Christopher", "last": "Eccleston", "id": 1 } ]';
+
+     my regex Str     { '"' (<-[ " ]>+) '"' };
+     my regex Integer {         \d+         };
+
+     my regex Value {                       <Integer> | <Str>               };
+
+     my regex Pair  {             <Str> ':' \s+ <Value>                     };
+     my regex Pairs {     '{' \s+       <Pair>+    %% (',' \s+) \s+ '}'     };
+     my regex List  { '[' \s+           <Pairs>+   %% (',' \s+)     \s+ ']' };
+
+     $id ~~ m{ <List> };
+
+     say $/;
+
+
+
+
+

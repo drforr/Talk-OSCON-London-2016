@@ -1,0 +1,24 @@
+
+
+
+
+                                     Perl 6 style
+
+     for 'sample.txt'.IO.lines.kv -> $index, $line {
+     	my ( $method, $id, $name, timestamp ) = $line.chomp.split( "\t" );
+
+     	given $method {
+     		when 'create'	{ %object{$id} = $name, $timestamp }
+     		when 'delete'	{ %object{$id}:delete }
+     	}
+     	if $method eq 'read' | 'update' | 'delete' {
+     		say "missing object on line $index" unless %object{$id}
+     	}
+     }
+
+
+
+
+
+
+

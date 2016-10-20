@@ -1,0 +1,24 @@
+
+
+                                Look Ma, Proper Lists!
+
+     my $fh = open 'sample.tsv', :r;
+
+     my @line;
+     for $fh.lines -> $line {
+     	my ( $id, $last-name, $first-name ) =
+     		$line.chomp.split( "\t" );
+     	@line[$id - 1] = $last-name, $first-name;
+     }
+
+     close $fh;
+
+     say @line;
+
+     # [("Tyler", "Rose"), ("Smith", "Mickey"),
+        ("Jones", "Martha"), ("Noble", "Donna")]
+
+
+
+
+
